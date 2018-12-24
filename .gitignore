@@ -1,1 +1,19 @@
-twitter.*
+## File-based project format:
+
+*.iml
+
+*.log
+
+*.7z
+
+*.zip
+
+*.properties
+
+
+# IntelliJ
+
+/target/
+
+/.idea/
+
