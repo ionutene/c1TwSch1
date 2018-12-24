@@ -10,6 +10,11 @@
 
 *.properties
 
+*.iml
+
+*.xml
+
+*.something
 
 # IntelliJ
 
