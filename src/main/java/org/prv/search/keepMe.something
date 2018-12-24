@@ -1,0 +1,64 @@
+  private static void print(List<Status> statuses) {
+        for (Status searchStatus : statuses) {
+            LOGGER.info(
+                    "\n-------------------------getName------\n"
+                            + searchStatus.getUser().getName()
+                            + "\n-------------------------getText------\n"
+                            + searchStatus.getText()
+                            + "\n----------------------------getLang-----\n"
+                            + searchStatus.getLang()
+                            + "\n-------------------------getSource------\n"
+                            + searchStatus.getSource()
+                            + "\n-------------------------get time------\n"
+                            + Instant.now().getEpochSecond()
+                            + "\n-------------------------getQuotedStatusPermalink------\n"
+                            + searchStatus.getQuotedStatusPermalink()
+
+            );
+        }
+    }
+
+    private static void printLite(List<Status> statuses) {
+        for (Status status : statuses) {
+            LOGGER.info(
+                    simpleDateFormat.format(new Date(status.getCreatedAt().getTime())) + " "
+                            + status.getText() + "\n\t\t"
+                            + status.getQuotedStatusPermalink() + "\n\t\t "
+                            + status.getUser().getName() + "\n\t\t");
+
+        }
+    }
+
+    private static List<Status> filterStatus(List<Status> statuses, final String filterBy) {
+        return statuses.stream().filter(e -> e.getText().toLowerCase().contains(filterBy.toLowerCase())).collect(Collectors.toList());
+    }
+
+    private static void fileWrite() {
+        try {
+            File fout = new File("out.txt");
+
+            FileOutputStream fos = new FileOutputStream(fout);
+
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+
+            for (int i = 0; i < 10; i++) {
+                bw.write("something");
+                bw.newLine();
+            }
+
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Status> searchSimular(Twitter twitter, String tag) throws TwitterException {
+        List<Status> result = new ArrayList<>();
+        QueryResult qRes = twitter.search(new Query(tag).lang("EN").count(100).count(100).resultType(Query.ResultType.recent));
+        do {
+            result.addAll(qRes.getTweets());
+            qRes = twitter.search(qRes.nextQuery());
+        } while (result.size() < 200 && qRes.hasNext());
+
+        return result;
+    }
